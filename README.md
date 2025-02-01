@@ -22,7 +22,7 @@ Go to the [BEN2 huggingface page](https://huggingface.co/PramaLLC/BEN2/tree/main
 ```
 The folder should look like this:
 ```
-└── ComfyUI/custom-nodes/ComfyUI-BEN/
+└── ComfyUI/custom-nodes/BEN2_ComfyUI/
     ├── __init__.py
     ├── background_erase_network.py
     ├── ben.png
