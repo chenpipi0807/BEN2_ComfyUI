@@ -20,7 +20,7 @@ class BackgroundEraseNetwork:
     def __init__(self):
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.model = BEN2.BEN_Base().to(device).eval()
-        self.model.loadcheckpoints("./custom_nodes/ComfyUI-BEN/BEN2_Base.pth")
+        self.model.loadcheckpoints(os.path.join(script_directory, "BEN2_Base.pth"))
         self.to_pil = transforms.ToPILImage()
         self.to_tensor = transforms.ToTensor()
 
@@ -42,10 +42,10 @@ class BackgroundEraseNetwork:
         if isinstance(input_image, torch.Tensor):
             if input_image.dim() == 4:
                 input_image = input_image[0]
-            
+
             if input_image.dim() == 3:
                 input_image = input_image.permute(2, 0, 1)
-            
+
             input_image = self.to_pil(input_image)
 
         # Ensure the image is in RGBA mode
@@ -57,10 +57,10 @@ class BackgroundEraseNetwork:
 
         # Convert the foreground to tensor
         foreground_tensor = self.to_tensor(foreground)
-        
+
         # Convert to ComfyUI format [B, H, W, C]
         foreground_tensor = foreground_tensor.permute(1, 2, 0).unsqueeze(0)
-        
+
         return (foreground_tensor,)
 
 # Export mappings for ComfyUI
