@@ -18,7 +18,7 @@ pip install -r requirements.txt
 ```
 Go to the [BEN2 huggingface page](https://huggingface.co/PramaLLC/BEN2/tree/main) and download `BEN2_Base.pth`and place them inside:
 ```
-...ComfyUI/custom-nodes/ComfyUI-BEN/
+...ComfyUI/custom-nodes/BEN2_ComfyUI/
 ```
 The folder should look like this:
 ```
