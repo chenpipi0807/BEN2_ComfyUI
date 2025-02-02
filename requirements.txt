@@ -4,5 +4,5 @@ numpy
 torch
 einops
 Pillow
-timm
+timm>=1.0.10
 torchvision
