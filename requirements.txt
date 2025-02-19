@@ -1,5 +1,4 @@
 huggingface_hub
-Image
 numpy
 torch
 einops
