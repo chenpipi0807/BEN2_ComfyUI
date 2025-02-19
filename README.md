@@ -12,7 +12,7 @@ Remove backgrounds from images with [BEN2](https://huggingface.co/PramaLLC/BEN2)
 ## Installation
 
 ```
-git clone https://github.com/PramaLLC/BEN2_ComfyUI.git
+git clone https://github.com/chenpipi0807/BEN2_ComfyUI.git
 ```
 ```
 cd BEN2_ComfyUI
