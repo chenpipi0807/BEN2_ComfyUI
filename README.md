@@ -1,3 +1,7 @@
+我给这个输出加了个MASK用来支持在更多地方使用，
+此外我不知道他的requirements.txt里面的image是啥反正我没装也能用
+
+
 # ComfyUI BEN - Background Erase Network
 
 ****
