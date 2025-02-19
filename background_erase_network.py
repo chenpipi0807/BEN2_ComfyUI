@@ -11,10 +11,9 @@ sys.path.append(script_directory)
 import BEN2
 
 class BackgroundEraseNetwork:
-    # Define these as class variables (outside of any method)
-    RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("image",)
-    FUNCTION = "process"
+    RETURN_TYPES = ("IMAGE", "MASK")
+    RETURN_NAMES = ("image", "mask")
+    FUNCTION = "process_image"
     CATEGORY = "BEN2"
 
     def __init__(self):
@@ -32,42 +31,41 @@ class BackgroundEraseNetwork:
             },
         }
 
-    RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("image",)
-    FUNCTION = "process_image"
-    CATEGORY = "BEN2"
-
     def process_image(self, input_image):
-        # Handle the input tensor format from ComfyUI
+        # 处理输入图像
         if isinstance(input_image, torch.Tensor):
             if input_image.dim() == 4:
                 input_image = input_image[0]
-
+            
             if input_image.dim() == 3:
                 input_image = input_image.permute(2, 0, 1)
 
             input_image = self.to_pil(input_image)
 
-        # Ensure the image is in RGBA mode
+        # 转换为RGBA格式
         if input_image.mode != 'RGBA':
             input_image = input_image.convert("RGBA")
 
-        # Run inference to get the foreground image
+        # 执行推理
         foreground = self.model.inference(input_image)
 
-        # Convert the foreground to tensor
+        # 提取alpha通道作为mask
+        alpha = foreground.split()[-1]
+        mask_np = np.array(alpha)
+        mask_tensor = torch.from_numpy(mask_np).float() / 255.0  # 归一化到[0,1]
+        mask_tensor = mask_tensor.unsqueeze(0)  # [B, H, W]
+
+        # 转换前景图像为tensor
         foreground_tensor = self.to_tensor(foreground)
+        foreground_tensor = foreground_tensor.permute(1, 2, 0).unsqueeze(0)  # [B, H, W, C]
 
-        # Convert to ComfyUI format [B, H, W, C]
-        foreground_tensor = foreground_tensor.permute(1, 2, 0).unsqueeze(0)
+        return (foreground_tensor, mask_tensor)
 
-        return (foreground_tensor,)
-
-# Export mappings for ComfyUI
+# ComfyUI节点映射
 NODE_CLASS_MAPPINGS = {
     "BackgroundEraseNetwork": BackgroundEraseNetwork
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "BackgroundEraseNetwork": "Background Erase Network Image"
+    "BackgroundEraseNetwork": "Background Erase Network (Image+Mask)"
 }
